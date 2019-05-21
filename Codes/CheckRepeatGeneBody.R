@@ -1,13 +1,15 @@
-setwd('~/delaram/data/SNPpanel')
 library(data.table)
 library(GenomicRanges)
 library(IRanges)
 library(parallel)
-#
-targets=fread('targeted_405.txt')
-annot=fread('~/genecode.annot.gtf')
-repeats=fread('~/iranome/hg38repeat.txt')
-panel=read.csv('~/delaram/data/SNPpanel/snpPanel.csv',header=T)
+
+
+
+TargetSNPs <- fread('largeFiles/targeted_405.txt')
+GeneCodeAnnot <- fread('Data/genecode.annot.gtf')
+RepeatRegions <- fread('largeFiles/hg38repeat.txt')
+Panel <- read.csv('largeFiles/snpPanel.csv', header=T)
+
 
 colnames(targets)[1]='chr'
 targets$chr=paste0('chr',targets$chr)
@@ -15,6 +17,7 @@ targets.GR = GRanges(seqnames=targets$chr,ranges=IRanges(start=targets$start,end
 targets=unique(targets)#396 positions
 targets$id=paste0(targets$chr,sep='_',targets$start)
 panel$id=paste0(panel$chr,sep='_',panel$pos)
+
 
 ############################ Repeats
 #### raw regions

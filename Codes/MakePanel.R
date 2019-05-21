@@ -1,15 +1,12 @@
-
 ## in this script, we will define and apply some filters 
 ##    to the cleaned iranome dataset, in order to find a set of 
 ##    optimized SNPs for individual identification in iranian population
 
 
-library(parallel)
-library(UpSetR)
-library(tictoc)
-
-
+source('Codes/Clean_Iranome_functions.R')
+Initialize()
 ir = readRDS("largeFiles/cleanIranome.rds")
+
 
 ## filtering weird positions in iranome 
 ##   dataset which have higher than 1 frequency value!
@@ -199,13 +196,13 @@ ir2<- subset(ir,
 
 TargetPositions <- paste0(ir2$chrom, sep='_', ir2$pos)
 length(TargetPositions)
+saveRDS(TargetPositions, 'TargetPositions.rds')
 
 
 
 
 
-
-####### wierd detection ! H.obs>1 !! >> check iranome original data for these positions 
+####### weird detection ! H.obs>1 !! >> check iranome original data for these positions 
 weird=sapply(tribes, function(x) ir[(2*ir[,paste0("hets_",x)])>ir[,paste0("anc_",x)],], simplify = F)
 mapply(function(i,j) summary(i[,paste0('hetFreq_',names(weird)[j])]), weird, 1:length(weird)) #why het_freq>1 ???
 
