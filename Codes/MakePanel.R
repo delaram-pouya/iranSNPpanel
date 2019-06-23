@@ -3,7 +3,7 @@
 ##    optimized SNPs for individual identification in iranian population
 
 
-source('Codes/Clean_Iranome_functions.R')
+source('Codes/Functions.R')
 Initialize()
 ir = readRDS("largeFiles/cleanIranome.rds")
 
@@ -15,6 +15,9 @@ ir$weird = (ir$hetFreq_Arab > 1 | ir$hetFreq_Azeri>1 | ir$hetFreq_Baloch>1 | ir$
              ir$hetFreq_Lur > 1| ir$hetFreq_Persian>1| ir$`hetFreq_Persian Gulf Islander`>1 | ir$hetFreq_Turkmen>1)
 
 
+table(ir$weird) # F: 1662440    T: 4177 
+sum(ir$weird)/nrow(ir) 
+
 ir <- subset(ir, !weird)
 
 
@@ -25,7 +28,9 @@ ir <- subset(ir, !weird)
 ##  than 32 depth in that specific snp position(out of 800 people)
 
 ir$NumHighDepth = rowSums(ir[,paste0("D", seq(32.5, 97.5, 5))]) 
-hist(ir$NumHighDepth)
+ggplot(ir, aes(x=NumHighDepth))+geom_histogram(color='pink4', fill='pink2',bins=30)+
+  theme_bw()+xlab('#indiv with depth>32 in SNP position(out 0f 800)')+ggtitle('Depth distribution')
+
 MIN_NUMBER_OF_HIGH_DEPTH = quantile(ir$NumHighDepth, 0.3) #103
 print(paste0('MIN_NUMBER_OF_HIGH_DEPTH is: ', MIN_NUMBER_OF_HIGH_DEPTH))
 # MIN_NUMBER_OF_HIGH_DEPTH = 400
@@ -39,7 +44,9 @@ print(paste0('MIN_NUMBER_OF_HIGH_DEPTH is: ', MIN_NUMBER_OF_HIGH_DEPTH))
 ##  than 37 quality score in that specific snp position(out of 800 people)
 
 ir$NumHighQuality = rowSums(ir[,paste0("Q", seq(37.5, 97.5, 5))]) 
-hist(ir$NumHighQuality)
+ggplot(ir, aes(x=NumHighQuality))+geom_histogram(color='black', fill='cyan3',bins=30)+
+  theme_bw()+xlab('#indiv with quality-score>37 in SNP position(out 0f 800)')+ggtitle('Quality Score distribution')
+
 NumHighQuality_Sorted  = sort(ir$NumHighQuality)
 MIN_NUMBER_OF_HIGH_QUALITY_SCORE = NumHighQuality_Sorted[round(length(NumHighQuality_Sorted)*0.3)] #370
 print(paste0('MIN_NUMBER_OF_HIGH_QUALITY_SCORE is: ', MIN_NUMBER_OF_HIGH_QUALITY_SCORE))
@@ -57,7 +64,9 @@ print(paste0('MIN_NUMBER_OF_HIGH_QUALITY_SCORE is: ', MIN_NUMBER_OF_HIGH_QUALITY
 
 
 AlleleNumber_Sorted = sort(ir$allele_num)
-hist(ir$allele_num)
+ggplot(ir, aes(x=allele_num))+geom_histogram(color='black', fill='orange',bins=30)+
+  theme_bw()+xlab('Summation of allele number in all indivs for the SNP position')+ggtitle('Allele-number distribution')
+
 MIN_SUM_ALLELE_NUMBER = AlleleNumber_Sorted[round(length(AlleleNumber_Sorted)*0.05)] #736
 print(paste0('MIN_SUM_ALLELE_NUMBER is: ', MIN_SUM_ALLELE_NUMBER))
 
@@ -114,7 +123,7 @@ ir$F.ST <- abs(ir$F.ST)
 #### Interpretation ??
 
 plot(ir$F.ST, ir$allele_freq)
-plot(ir$F.ST, ir$HI)
+plot(ir$F.ST, ir$HI, xlab='F.st', ylab='Heterozygosity(HI)')
 plot(ir$HI, ir$allele_freq)
 plot(ir$F.IT, ir$F.IS)
 plot(ir$F.IT, ir$F.ST)
@@ -138,7 +147,6 @@ sapply(1:length(ir_ChrSplit), function(i){
   })
 
 ir <- do.call(rbind, ir_ChrSplit)
-
 
 
 

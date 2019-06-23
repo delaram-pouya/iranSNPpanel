@@ -11,6 +11,9 @@ Initialize <- function(){
   library(biomaRt)
   library(UpSetR)
   library(tictoc)
+  library(GenomicRanges)
+  library(IRanges)
+  library(ggplot2)
 }
 
 

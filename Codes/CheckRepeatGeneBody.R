@@ -1,8 +1,5 @@
-library(data.table)
-library(GenomicRanges)
-library(IRanges)
-library(parallel)
-
+source('Codes/Functions.R')
+Initialize()
 
 
 TargetSNPs <- fread('largeFiles/targeted_405.txt')

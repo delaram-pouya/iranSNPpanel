@@ -3,6 +3,8 @@
 #    published SNP panels
 
 source('Codes/Functions.R')
+Initialize()
+
 
 DIR = 'PaperSNPs/'
 SNPfiles <- list.files(DIR, include.dirs = T, full.names = T)
